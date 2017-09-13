@@ -1,0 +1,426 @@
+---
+swagger: "2.0"
+info:
+  description: "The API for the Social Virtual Object in the Lysis Platform"
+  version: "1.0.2"
+  title: "Lysis-svo"
+host: "virtserver.swaggerhub.com"
+basePath: "/Marcour/Lysis/1.0.0"
+schemes:
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /sensor:
+    post:
+      tags:
+      - "Sensor data request"
+      description: "Real-time values or refered to a specific time interval"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Authentication with the owner or friend key, empty if the sensor\
+          \ is public. Then sensor name is required in order to obtain his values"
+        required: false
+        schema:
+          $ref: "#/definitions/SensorRequest"
+      responses:
+        401:
+          description: "Not Authorized"
+        405:
+          description: "Invalid Input"
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/SensorResponse"
+  /resources:
+    post:
+      tags:
+      - "Resource List"
+      operationId: "register"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Resources discovery"
+        required: false
+        schema:
+          $ref: "#/definitions/ResourceRequest"
+      responses:
+        401:
+          description: "Not Authorized"
+        405:
+          description: "Invalid Input"
+        200:
+          description: "response with the list of resources avaible"
+          schema:
+            $ref: "#/definitions/ResourceResponse"
+  /getFriendList:
+    post:
+      tags:
+      - "Friend List"
+      operationId: "friend"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Friend list given a VO"
+        required: true
+        schema:
+          $ref: "#/definitions/FriendListRequest"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/FriendListResponse"
+  /setActuator:
+    post:
+      tags:
+      - "Comando attuatori"
+      operationId: "setSwitch"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Send command to actuators"
+        required: true
+        schema:
+          $ref: "#/definitions/ActuatorRequest"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+  /trigger/set:
+    post:
+      tags:
+      - "Set a trigger"
+      operationId: "setTrigger"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "characterization of a trigger event"
+        required: true
+        schema:
+          $ref: "#/definitions/TriggerRequestSet"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/TriggerSetResponse"
+definitions:
+  TriggerRequestSet:
+    type: "object"
+    required:
+    - "app_id"
+    - "condition"
+    - "event"
+    - "feature"
+    - "key"
+    - "output_address"
+    - "output_method"
+    - "output_value"
+    - "status"
+    - "value"
+    properties:
+      event:
+        type: "string"
+        example: "SENSOR"
+        description: "Which events are able to trigger an action"
+        enum:
+        - "FRIENDSHIP"
+        - "SENSOR"
+      feature:
+        type: "string"
+        example: "TEMPERATURE"
+        description: "If the event is SENSOR you must to put the sensor name in the\
+          \ feature filed otherwise, if the event is FRIENDSHIP you have to put which\
+          \ kind of relation you want to trigger out."
+        enum:
+        - "<$sensor_name>"
+        - "<$relation_name>"
+      condition:
+        type: "string"
+        example: "IN_RANGE"
+        description: "The conditions to trigger out events."
+        enum:
+        - "FORMED"
+        - "VERIFIED"
+        - "EQUAL"
+        - "NOT_EQUAL"
+        - "GREATER_THAN"
+        - "GREATER_THAN_OR_EQUAL"
+        - "LESS_THAN"
+        - "LESS_THAN_OR_EQUAL"
+        - "IN_RANGE"
+        - "OUT_RANGE"
+        - "INPUT_RANGE"
+        - "OUTPUT_RANGE"
+      value:
+        type: "string"
+        description: "The threshold for the conditions. For geographic conditions\
+          \ (IN_RANGE, OUT_RANGE, INPUT_RANGE, OUTPUT_RANGE) you have to set a geometric\
+          \ shape, it could be a polyline or circumference. Circumference - \"<center\
+          \ latitude>,<center longitude>;<radius>\" Polyline - \"<Point 1 lat>,<Point\
+          \ 1 lon> ; <Point 2 lat>,<Point 2 lon>; ...\""
+      output_method:
+        type: "string"
+        example: "POST"
+        description: "Method for the output triggered. POST - Performig a HTTP POST\
+          \ to \"<output_address>\" MQTT - Performing a \"publish\" with the \"<output_value>\"\
+          \ to the topic specified in the \"<output_address>\" ACTUATOR - Send the\
+          \ \"<output_value>\" to the actuator specified in  the \"<output_address>\""
+        enum:
+        - "POST"
+        - "MQTT"
+        - "ACTUATOR"
+      output_address:
+        type: "string"
+        description: "The destination for the output message. It changes according\
+          \ to the type of \"output_method\" chosen. POST chosen - the \"url\" of\
+          \ resource wich tou want to reach. MQTT chosen - the \"topic\" for mqtt\
+          \ publish ACTUATOR chosen - the \"actuator_name\" which you want to reach"
+        enum:
+        - "<url>"
+        - "<topic>"
+        - "<actuator_name>"
+      output_value:
+        type: "string"
+        description: "It cointains the message which the SVO send to the \"<output_address>\"\
+          \ chosen There is the possibility to print values through particular tags.\
+          \ %value% - The svo substitutes this tag with the value which triggered\
+          \ out the event %timestamp% - The svo substitutes this tag with the UTC\
+          \ timestamp the event occurred"
+      app_id:
+        type: "string"
+        example: "appengine_projectid"
+        description: "The app id of application that wants to set the trigger"
+      key:
+        type: "string"
+        example: "f6g7j93g3264tc16kr163hu90j"
+        description: "The owner key of the SVO that want to set the trigger"
+      status:
+        type: "string"
+        description: "The status of the trigger after the setting, it could be activated\
+          \ or deactivated"
+  TriggerSetResponse:
+    type: "object"
+    properties:
+      trigger_id:
+        type: "string"
+        example: "16253f34"
+        description: "Once the trigger is setted, the svo return the \"trigger_id\"\
+          \ it is needed to delete, activate/deactivate the trigger. It is unique\
+          \ only in in the svo space."
+  ActuatorRequest:
+    type: "object"
+    required:
+    - "actuator_name"
+    - "key"
+    - "value"
+    properties:
+      key:
+        type: "string"
+        example: "f6g7j93g3264tc16kr163hu90j"
+        description: "Object's owner key"
+      actuator_name:
+        type: "string"
+        example: "LED01"
+        description: "The name of actuator which you want to activate/deactivate"
+      value:
+        type: "string"
+        example: "true"
+  FriendListRequest:
+    type: "object"
+    required:
+    - "friendship"
+    - "key"
+    properties:
+      key:
+        type: "string"
+        example: "f6g7j93g3264tc16kr163hu90j"
+        description: "Object's owner key"
+      friendship:
+        type: "string"
+        example: "SOR"
+        enum:
+        - "OOR"
+        - "SOR"
+        - "POR"
+        - "CLOR"
+        - "CWOR"
+        - "ALL"
+  FriendListResponse:
+    type: "object"
+    properties:
+      vo:
+        type: "array"
+        items:
+          $ref: "#/definitions/svo"
+  svo:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+        example: "www.appengine-projectid.appspot.com"
+        description: "The url of SVO"
+      friend_key:
+        type: "string"
+        example: "f6g7j93g3264tc16kr163hu90j"
+        description: "The friend key associated with the Svo"
+    description: "SVOs discovered by means friend list request"
+  SensorRequest:
+    type: "object"
+    required:
+    - "sensor_name"
+    - "time_scope"
+    properties:
+      key:
+        type: "string"
+        description: "Owner key of the object or friend key"
+      sensor_name:
+        type: "string"
+        example: "PRESSURE"
+        description: "The name of sensor"
+      limit:
+        type: "integer"
+        format: "int32"
+      time_scope:
+        $ref: "#/definitions/timeScope"
+  timeScope:
+    type: "object"
+    properties:
+      start_time:
+        type: "string"
+        format: "date-time"
+      stop_time:
+        type: "string"
+        format: "date-time"
+    description: "Time interval for sensor values, if it's empty real-time value is\
+      \ retunred. For last value avaible just write \"last\" in the timestamp field."
+  SensorResponse:
+    type: "object"
+    properties:
+      timestamp:
+        type: "array"
+        example:
+        - "2017-08-28T13:02:37.683Z"
+        - "2017-09-28T13:04:20.589Z"
+        items:
+          type: "string"
+          format: "date-time"
+          description: "The timestamp of each sample"
+      name:
+        type: "string"
+        example: "PRESSURE"
+      value:
+        type: "array"
+        example:
+        - 10
+        - 20
+        items:
+          type: "number"
+          format: "float"
+      type:
+        type: "string"
+        example: "number"
+        enum:
+        - "number"
+        - "text"
+      location:
+        $ref: "#/definitions/location"
+  location:
+    type: "object"
+    properties:
+      latitude:
+        type: "number"
+        format: "float"
+        example: 39.228615
+      longitude:
+        type: "number"
+        format: "float"
+        example: 9.11097
+  relationship:
+    type: "object"
+    properties:
+      type:
+        type: "string"
+        example: "friend"
+        enum:
+        - "public"
+        - "private"
+        - "friend"
+      location:
+        $ref: "#/definitions/location"
+  ResourceRequest:
+    type: "object"
+    required:
+    - "owner_id"
+    properties:
+      owner_id:
+        type: "string"
+        description: "Owner key of the object or friend key"
+      limit:
+        type: "integer"
+        format: "int32"
+        example: 1
+        description: "The number of entries"
+      hops:
+        type: "integer"
+        format: "int32"
+      longitude:
+        type: "number"
+        format: "float"
+      latitude:
+        type: "number"
+        format: "float"
+      range:
+        type: "number"
+        format: "float"
+        description: "The radius in meters of the circle within which you want to\
+          \ find the resources"
+      tag:
+        type: "string"
+        example: "type = sensor AND umidita"
+        description: "a word for semantic research"
+      relationship:
+        $ref: "#/definitions/relationship"
+  ResourceResponse:
+    type: "object"
+    properties:
+      permission:
+        type: "string"
+        example: "friend"
+        enum:
+        - "public"
+        - "private"
+        - "friend"
+      key:
+        type: "string"
+      resource_url:
+        type: "string"
+        example: "http://svo-project.appspot.com"
+      feature_name:
+        type: "string"
+        example: "humidity"
+  ApiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+        example: "everything is ok"
+  DeviceRegistrationInfo:
+    type: "object"
+    properties:
+      uri:
+        type: "string"
+        format: "uri"
+        example: "http://10.0.0.220:8080"
+      id:
+        type: "string"
+        format: "uuid"
+        example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
