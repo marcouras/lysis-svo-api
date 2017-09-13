@@ -92,27 +92,10 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/ApiResponse"
-  /trigger/set:
-    post:
-      tags:
-      - "Set a trigger"
-      operationId: "setTrigger"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "characterization of a trigger event"
-        required: true
-        schema:
-          $ref: "#/definitions/TriggerRequestSet"
-      responses:
-        200:
-          description: "response"
-          schema:
-            $ref: "#/definitions/TriggerSetResponse"
   /trigger/unset:
     post:
       tags:
-      - "Unset trigger"
+      - "unset-trigger"
       operationId: "UnsetTrigger"
       parameters:
       - in: "body"
@@ -126,10 +109,57 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/ApiResponse"
+  /trigger/set:
+    post:
+      tags:
+      - "Set a trigger"
+      operationId: "setTrigger"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "characterization of a trigger event"
+        required: true
+        schema:
+          $ref: "#/definitions/TriggerSetRequest"
+      responses:
+        200:
+          schema:
+            $ref: "#/definitions/TriggerSetResponse"
 definitions:
-  TriggerUnsetRequest:
+  TriggerSetResponse:
     type: "object"
     properties:
+      trigger_id:
+        type: "string"
+        example: "16253f34"
+        description: "Once the trigger is setted, the svo return the <trigger_id>\
+          \ it is needed to delete, activate/deactivate the trigger. It is unique\
+          \ only in in the svo space."
+  TriggerStatusRequest:
+    type: "object"
+    required:
+    - "key"
+    - "status"
+    - "trigger_id"
+    properties:
+      key:
+        type: "string"
+        description: "The friend key of the svo is mandatory to allow the operation"
+      trigger_id:
+        type: "string"
+        example: "d394nv"
+      status:
+        type: "string"
+        example: "true"
+        description: "Set e new status for the trigger specified in trigger_id field"
+  TriggerUnsetRequest:
+    type: "object"
+    required:
+    - "key"
+    properties:
+      key:
+        type: "string"
+        description: "The friend key of the svo is mandatory to allow the operation"
       scope:
         type: "string"
         example: "ONE"
@@ -138,8 +168,9 @@ definitions:
         type: "string"
         example: "d394nv"
         description: "If you want to delete only one trigger put here, the trigger-id\
-          \ wgich you wanto to delete"
-  TriggerRequestSet:
+          \ which you wanto to delete. If you want to delete all trigger put ALL in\
+          \ the scope field"
+  TriggerSetRequest:
     type: "object"
     required:
     - "app_id"
@@ -233,15 +264,6 @@ definitions:
         type: "string"
         description: "The status of the trigger after the setting, it could be activated\
           \ or deactivated"
-  TriggerSetResponse:
-    type: "object"
-    properties:
-      trigger_id:
-        type: "string"
-        example: "16253f34"
-        description: "Once the trigger is setted, the svo return the \"trigger_id\"\
-          \ it is needed to delete, activate/deactivate the trigger. It is unique\
-          \ only in in the svo space."
   ActuatorRequest:
     type: "object"
     required:
