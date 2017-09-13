@@ -160,7 +160,33 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/ApiResponse"
+  /schedule/get:
+    post:
+      tags:
+      - "Get Schedule Interval"
+      description: "Get information about the Schedule time Interval"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Get information about the schedule interval"
+        required: true
+        schema:
+          $ref: "#/definitions/SchdeuleGet"
+      responses:
+        200:
+          description: "OK"
 definitions:
+  SchdeuleGet:
+    type: "object"
+    properties:
+      key:
+        type: "string"
+        description: "The key is required in order to activate scheduling tasks. If\
+          \ the sensor is public or friend, the required key is the friend-key otherwise\
+          \ the key is the owner-key"
+      sensor_name:
+        type: "string"
+        example: "TEMPERATURE"
   ScheduleSet:
     type: "object"
     properties:
