@@ -78,7 +78,7 @@ paths:
   /setActuator:
     post:
       tags:
-      - "Comando attuatori"
+      - "Actuator Command"
       operationId: "setSwitch"
       parameters:
       - in: "body"
@@ -95,7 +95,7 @@ paths:
   /trigger/unset:
     post:
       tags:
-      - "unset-trigger"
+      - "Unset a Trigger"
       operationId: "UnsetTrigger"
       parameters:
       - in: "body"
@@ -109,6 +109,22 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/ApiResponse"
+  /trigger/status:
+    post:
+      tags:
+      - "Change the status of a Trigger"
+      operationId: "TriggerStatus"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/TriggerStatusRequest"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/TriggerStatusResponse"
   /trigger/set:
     post:
       tags:
@@ -123,9 +139,44 @@ paths:
           $ref: "#/definitions/TriggerSetRequest"
       responses:
         200:
+          description: "response"
           schema:
             $ref: "#/definitions/TriggerSetResponse"
+  /schedule/set:
+    post:
+      tags:
+      - "Set scheduled task for a sensor"
+      description: "Repeat the task every <schedule_interval> for the sensor specified\
+        \ in the <sensor_name>"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Set a scheduled task for a specific sensor"
+        required: true
+        schema:
+          $ref: "#/definitions/ScheduleSet"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 definitions:
+  ScheduleSet:
+    type: "object"
+    properties:
+      key:
+        type: "string"
+        description: "The key is required in order to activate scheduling tasks. If\
+          \ the sensor is public or friend, the required key is the friend-key otherwise\
+          \ the key is the owner-key"
+      sensor_name:
+        type: "string"
+        example: "TEMPERATURE"
+      schedule_interval:
+        type: "integer"
+        format: "int32"
+        example: 2
+        description: "The time interval between a task and another (in seconds)"
   TriggerSetResponse:
     type: "object"
     properties:
@@ -135,6 +186,15 @@ definitions:
         description: "Once the trigger is setted, the svo return the <trigger_id>\
           \ it is needed to delete, activate/deactivate the trigger. It is unique\
           \ only in in the svo space."
+  TriggerStatusResponse:
+    type: "object"
+    properties:
+      trigger:id:
+        type: "string"
+        example: "16253f34"
+      status:
+        type: "string"
+        example: "STATUS ON"
   TriggerStatusRequest:
     type: "object"
     required:
