@@ -109,7 +109,31 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/TriggerSetResponse"
+  /trigger/unset:
+    post:
+      tags:
+      - "Unset trigger"
+      operationId: "setTrigger"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Unset trigger"
+        required: true
+        schema:
+          $ref: "#/definitions/TriggerUnsetRequest"
 definitions:
+  TriggerUnsetRequest:
+    type: "object"
+    properties:
+      scope:
+        type: "string"
+        example: "ONE"
+        description: "Specify if you want to unset one trigger or all"
+      trigger_id:
+        type: "string"
+        example: "d394nv"
+        description: "If you want to delete only one trigger put here, the trigger-id\
+          \ wgich you wanto to delete"
   TriggerRequestSet:
     type: "object"
     required:
