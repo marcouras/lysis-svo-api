@@ -2,10 +2,10 @@
 swagger: "2.0"
 info:
   description: "The API for the Social Virtual Object in the Lysis Platform"
-  version: "1.0.2"
+  version: "1.0.0"
   title: "Lysis-svo"
 host: "virtserver.swaggerhub.com"
-basePath: "/Marcour/Lysis/1.0.0"
+basePath: "/Marcour/Lysis-svo/1.0.0"
 schemes:
 - "https"
 consumes:
@@ -113,7 +113,7 @@ paths:
     post:
       tags:
       - "Unset trigger"
-      operationId: "setTrigger"
+      operationId: "UnsetTrigger"
       parameters:
       - in: "body"
         name: "body"
@@ -121,6 +121,11 @@ paths:
         required: true
         schema:
           $ref: "#/definitions/TriggerUnsetRequest"
+      responses:
+        200:
+          description: "response"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 definitions:
   TriggerUnsetRequest:
     type: "object"
