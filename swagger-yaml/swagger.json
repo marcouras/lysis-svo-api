@@ -187,6 +187,9 @@ definitions:
       sensor_name:
         type: "string"
         example: "TEMPERATURE"
+    example:
+      key: "key"
+      sensor_name: "TEMPERATURE"
   ScheduleSet:
     type: "object"
     properties:
@@ -203,6 +206,10 @@ definitions:
         format: "int32"
         example: 2
         description: "The time interval between a task and another (in seconds)"
+    example:
+      schedule_interval: 2
+      key: "key"
+      sensor_name: "TEMPERATURE"
   TriggerSetResponse:
     type: "object"
     properties:
@@ -212,6 +219,8 @@ definitions:
         description: "Once the trigger is setted, the svo return the <trigger_id>\
           \ it is needed to delete, activate/deactivate the trigger. It is unique\
           \ only in in the svo space."
+    example:
+      trigger_id: "16253f34"
   TriggerStatusResponse:
     type: "object"
     properties:
@@ -221,6 +230,9 @@ definitions:
       status:
         type: "string"
         example: "STATUS ON"
+    example:
+      trigger:id: "16253f34"
+      status: "STATUS ON"
   TriggerStatusRequest:
     type: "object"
     required:
@@ -238,6 +250,10 @@ definitions:
         type: "string"
         example: "true"
         description: "Set e new status for the trigger specified in trigger_id field"
+    example:
+      trigger_id: "d394nv"
+      key: "key"
+      status: "true"
   TriggerUnsetRequest:
     type: "object"
     required:
@@ -256,6 +272,10 @@ definitions:
         description: "If you want to delete only one trigger put here, the trigger-id\
           \ which you wanto to delete. If you want to delete all trigger put ALL in\
           \ the scope field"
+    example:
+      scope: "ONE"
+      trigger_id: "d394nv"
+      key: "key"
   TriggerSetRequest:
     type: "object"
     required:
@@ -350,6 +370,17 @@ definitions:
         type: "string"
         description: "The status of the trigger after the setting, it could be activated\
           \ or deactivated"
+    example:
+      condition: "IN_RANGE"
+      feature: "TEMPERATURE"
+      output_address: "<url>"
+      output_method: "POST"
+      output_value: "output_value"
+      event: "SENSOR"
+      value: "value"
+      app_id: "appengine_projectid"
+      key: "f6g7j93g3264tc16kr163hu90j"
+      status: "status"
   ActuatorRequest:
     type: "object"
     required:
@@ -368,6 +399,10 @@ definitions:
       value:
         type: "string"
         example: "true"
+    example:
+      actuator_name: "LED01"
+      value: "true"
+      key: "f6g7j93g3264tc16kr163hu90j"
   FriendListRequest:
     type: "object"
     required:
@@ -388,6 +423,9 @@ definitions:
         - "CLOR"
         - "CWOR"
         - "ALL"
+    example:
+      friendship: "SOR"
+      key: "f6g7j93g3264tc16kr163hu90j"
   FriendListResponse:
     type: "object"
     properties:
@@ -395,6 +433,12 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/svo"
+    example:
+      vo:
+      - url: "www.appengine-projectid.appspot.com"
+        friend_key: "f6g7j93g3264tc16kr163hu90j"
+      - url: "www.appengine-projectid.appspot.com"
+        friend_key: "f6g7j93g3264tc16kr163hu90j"
   svo:
     type: "object"
     properties:
@@ -407,6 +451,9 @@ definitions:
         example: "f6g7j93g3264tc16kr163hu90j"
         description: "The friend key associated with the Svo"
     description: "SVOs discovered by means friend list request"
+    example:
+      url: "www.appengine-projectid.appspot.com"
+      friend_key: "f6g7j93g3264tc16kr163hu90j"
   SensorRequest:
     type: "object"
     required:
@@ -425,6 +472,13 @@ definitions:
         format: "int32"
       time_scope:
         $ref: "#/definitions/timeScope"
+    example:
+      limit: 0
+      key: "key"
+      sensor_name: "PRESSURE"
+      time_scope:
+        start_time: "2000-01-23T04:56:07.000+00:00"
+        stop_time: "2000-01-23T04:56:07.000+00:00"
   timeScope:
     type: "object"
     properties:
@@ -436,37 +490,60 @@ definitions:
         format: "date-time"
     description: "Time interval for sensor values, if it's empty real-time value is\
       \ retunred. For last value avaible just write \"last\" in the timestamp field."
+    example:
+      start_time: "2000-01-23T04:56:07.000+00:00"
+      stop_time: "2000-01-23T04:56:07.000+00:00"
   SensorResponse:
     type: "object"
     properties:
-      timestamp:
+      entries:
         type: "array"
-        example:
-        - "2017-08-28T13:02:37.683Z"
-        - "2017-09-28T13:04:20.589Z"
         items:
-          type: "string"
-          format: "date-time"
-          description: "The timestamp of each sample"
+          $ref: "#/definitions/reading"
+    example:
+      entries:
+      - name: "PRESSURE"
+        location:
+          latitude: 39.228615
+          longitude: 9.11097
+        type: "number"
+        value: 10.0
+        timestamp: "2017-08-28T13:02:37.683Z"
+      - name: "PRESSURE"
+        location:
+          latitude: 39.228615
+          longitude: 9.11097
+        type: "number"
+        value: 10.0
+        timestamp: "2017-08-28T13:02:37.683Z"
+  reading:
+    type: "object"
+    properties:
+      timestamp:
+        type: "string"
+        format: "date-time"
+        example: "2017-08-28T13:02:37.683Z"
+        description: "The timestamp of each sample"
       name:
         type: "string"
         example: "PRESSURE"
       value:
-        type: "array"
-        example:
-        - 10
-        - 20
-        items:
-          type: "number"
-          format: "float"
+        type: "number"
+        format: "float"
+        example: 10.0
       type:
         type: "string"
         example: "number"
-        enum:
-        - "number"
-        - "text"
       location:
         $ref: "#/definitions/location"
+    example:
+      name: "PRESSURE"
+      location:
+        latitude: 39.228615
+        longitude: 9.11097
+      type: "number"
+      value: 10.0
+      timestamp: "2017-08-28T13:02:37.683Z"
   location:
     type: "object"
     properties:
@@ -478,6 +555,9 @@ definitions:
         type: "number"
         format: "float"
         example: 9.11097
+    example:
+      latitude: 39.228615
+      longitude: 9.11097
   relationship:
     type: "object"
     properties:
@@ -490,6 +570,11 @@ definitions:
         - "friend"
       location:
         $ref: "#/definitions/location"
+    example:
+      location:
+        latitude: 39.228615
+        longitude: 9.11097
+      type: "friend"
   ResourceRequest:
     type: "object"
     required:
@@ -523,6 +608,19 @@ definitions:
         description: "a word for semantic research"
       relationship:
         $ref: "#/definitions/relationship"
+    example:
+      owner_id: "owner_id"
+      latitude: 1.4658129
+      limit: 1
+      range: 5.962134
+      hops: 0
+      tag: "type = sensor AND umidita"
+      relationship:
+        location:
+          latitude: 39.228615
+          longitude: 9.11097
+        type: "friend"
+      longitude: 6.0274563
   ResourceResponse:
     type: "object"
     properties:
@@ -541,6 +639,11 @@ definitions:
       feature_name:
         type: "string"
         example: "humidity"
+    example:
+      resource_url: "http://svo-project.appspot.com"
+      feature_name: "humidity"
+      permission: "friend"
+      key: "key"
   ApiResponse:
     type: "object"
     properties:
@@ -550,6 +653,9 @@ definitions:
       message:
         type: "string"
         example: "everything is ok"
+    example:
+      code: 0
+      message: "everything is ok"
   DeviceRegistrationInfo:
     type: "object"
     properties:
