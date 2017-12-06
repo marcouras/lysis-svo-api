@@ -467,13 +467,9 @@ definitions:
         type: "string"
         example: "PRESSURE"
         description: "The name of sensor"
-      limit:
-        type: "integer"
-        format: "int32"
       time_scope:
         $ref: "#/definitions/timeScope"
     example:
-      limit: 0
       key: "key"
       sensor_name: "PRESSURE"
       time_scope:
