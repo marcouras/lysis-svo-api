@@ -75,7 +75,7 @@ paths:
           description: "response"
           schema:
             $ref: "#/definitions/FriendListResponse"
-  /setActuator:
+  /actuator/set:
     post:
       tags:
       - "Actuator Command"
@@ -266,6 +266,12 @@ definitions:
         type: "string"
         example: "ONE"
         description: "Specify if you want to unset one trigger or all"
+      feature:
+        type: "string"
+        example: "POSITION"
+        description: "You can unset ALL trigger of one feature, for instance all POSITION\
+          \ trigger. You must specify ALL in the scope field and POSITION in the feature\
+          \ field"
       trigger_id:
         type: "string"
         example: "d394nv"
@@ -273,6 +279,7 @@ definitions:
           \ which you wanto to delete. If you want to delete all trigger put ALL in\
           \ the scope field"
     example:
+      feature: "POSITION"
       scope: "ONE"
       trigger_id: "d394nv"
       key: "key"
@@ -484,8 +491,8 @@ definitions:
       stop_time:
         type: "string"
         format: "date-time"
-    description: "Time interval for sensor values, if it's empty real-time value is\
-      \ retunred. For last value avaible just write \"last\" in the timestamp field."
+    description: "Time interval for sensor values, else write \"now\" if you want\
+      \ real-time value or write \"last\" for last value."
     example:
       start_time: "2000-01-23T04:56:07.000+00:00"
       stop_time: "2000-01-23T04:56:07.000+00:00"
