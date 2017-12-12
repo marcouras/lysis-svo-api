@@ -306,7 +306,7 @@ definitions:
         - "SENSOR"
       feature:
         type: "string"
-        example: "TEMPERATURE"
+        example: "POSITION"
         description: "If the event is SENSOR you must to put the sensor name in the\
           \ feature filed otherwise, if the event is FRIENDSHIP you have to put which\
           \ kind of relation you want to trigger out."
@@ -337,13 +337,15 @@ definitions:
         - "TECHNOLOGY_CHANGED"
       value:
         type: "string"
+        example: "{'shape':'CIRCUMFERENCE','params':{'center': [39.0234, 9.088], 'radius':\
+          \ 2}}"
         description: "The threshold for the conditions. For geographic conditions\
           \ (IN_RANGE, OUT_RANGE, INPUT_RANGE, OUTPUT_RANGE) you have to set a geometric\
           \ shape, it could be a polyline or circumference. \nThe format for geographic\
           \ condition must be a JSON string as follow:\n - Circumference example\n\
           \ {'shape':'CIRCUMFERENCE',\n 'params':{'center': [39.0234, 9.088], 'radius':\
-          \ 2}}\n - Polyline example\n {'shape': 'POLYLINE',\N 'points': [[39.432,\
-          \ 8.23], [39.100, 9,.00], [39.432, 8.45]] }"
+          \ 2}}\n - Polyline example\n {'shape': 'POLYLINE',\n 'points': [[39.432,\
+          \ 8.23], [39.100, 9,.00], [39.432, 8.45]]}"
       output_method:
         type: "string"
         example: "POST"
@@ -386,12 +388,13 @@ definitions:
           \ or deactivated"
     example:
       condition: "IN_RANGE"
-      feature: "TEMPERATURE"
+      feature: "POSITION"
       output_address: "<url>"
       output_method: "POST"
       output_value: "output_value"
       event: "SENSOR"
-      value: "value"
+      value: "{'shape':'CIRCUMFERENCE','params':{'center': [39.0234, 9.088], 'radius':\
+        \ 2}}"
       app_id: "appengine_projectid"
       key: "f6g7j93g3264tc16kr163hu90j"
       status: "status"
