@@ -318,9 +318,9 @@ definitions:
         example: "IN_RANGE"
         description: "The conditions to trigger out events. Note that for NUMERIC\
           \ data, condition can be only:\n ['VERIFIED','EQUAL','NOT_EQUAL','GREATER_THAN','GREATER_THAN_OR_EQUAL','LESS_THAN','LESS_THAN_OR_EQUAL']\
-          \ \nFor POSITION data, condition can be only:\n ['VERIFIED','IN_RANGE','OUT_RANGE','INPUT_RANGE','OUTPUT_RANGE'].\
-          \ \nFor TEXT data, condition ca be only:\n ['VERIFIED','TECHNOLOGY_CHANGED'].\
-          \ \nThe following array shows all the allowed conditions"
+          \ \n- For POSITION data, condition can be only:\n ['VERIFIED','IN_RANGE','OUT_RANGE','INPUT_RANGE','OUTPUT_RANGE'].\
+          \ \n- For TEXT data, condition ca be only:\n ['VERIFIED','TECHNOLOGY_CHANGED'].\n\
+          \nThe following array shows all the allowed conditions"
         enum:
         - "FORMED"
         - "VERIFIED"
