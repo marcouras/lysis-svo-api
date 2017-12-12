@@ -339,9 +339,11 @@ definitions:
         type: "string"
         description: "The threshold for the conditions. For geographic conditions\
           \ (IN_RANGE, OUT_RANGE, INPUT_RANGE, OUTPUT_RANGE) you have to set a geometric\
-          \ shape, it could be a polyline or circumference. Circumference - \"<center\
-          \ latitude>,<center longitude>;<radius>\" Polyline - \"<Point 1 lat>,<Point\
-          \ 1 lon> ; <Point 2 lat>,<Point 2 lon>; ...\""
+          \ shape, it could be a polyline or circumference. \nThe format for geographic\
+          \ condition must be a JSON string as follow:\n - Circumference example\n\
+          \ {'shape':'CIRCUMFERENCE',\n 'params':{'center': [39.0234, 9.088], 'radius':\
+          \ 2}}\n - Polyline example\n {'shape': 'POLYLINE',\N 'points': [[39.432,\
+          \ 8.23], [39.100, 9,.00], [39.432, 8.45]] }"
       output_method:
         type: "string"
         example: "POST"
