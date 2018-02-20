@@ -18,6 +18,7 @@ paths:
       tags:
       - "Sensor data request"
       description: "Real-time values or refered to a specific time interval"
+      operationId: "SensorRequest"
       produces:
       - "application/json"
       parameters:
@@ -41,7 +42,7 @@ paths:
     post:
       tags:
       - "Resource List"
-      operationId: "register"
+      operationId: "ResourceRequest"
       parameters:
       - in: "body"
         name: "body"
